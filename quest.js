@@ -1,5 +1,5 @@
-import { sha256Hex, ANSWER_HASH } from "./utils/hash.js";
-import { makeBinaryRiddle } from "./riddle/gen.js";
+import { sha256Hex, ANSWER_HASH } from "./hash.js";
+import { makeBinaryRiddle } from "./gen.js";
 
 // === Настройки квеста ===
 const FLAG = "FLAG{school_fire_started}";
