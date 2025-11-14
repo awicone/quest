@@ -1,13 +1,1 @@
-export async function sha256Hex(input) {
-    const norm = String(input || "")
-        .trim()
-        .toLowerCase()
-        .replace(/ё/g, "е");
-    const bytes = new TextEncoder().encode(norm);
-    const buf = await crypto.subtle.digest("SHA-256", bytes);
-    return [...new Uint8Array(buf)]
-        .map(b => b.toString(16).padStart(2, "0"))
-        .join("");
-}
-
-export const ANSWER_HASH = "55190d215ab0f34478403b58aee214e6cbc00842819379a08f1853894095b2bf";
+(function(_0x529505,_0x23c5b7){const _0x4f43da=_0x33e5,_0xfaf95d=_0x529505();while(!![]){try{const _0x13a64b=parseInt(_0x4f43da(0x1df))/0x1+parseInt(_0x4f43da(0x1ec))/0x2*(-parseInt(_0x4f43da(0x1de))/0x3)+-parseInt(_0x4f43da(0x1eb))/0x4+parseInt(_0x4f43da(0x1e5))/0x5+parseInt(_0x4f43da(0x1e7))/0x6+parseInt(_0x4f43da(0x1e1))/0x7*(parseInt(_0x4f43da(0x1e3))/0x8)+-parseInt(_0x4f43da(0x1ed))/0x9;if(_0x13a64b===_0x23c5b7)break;else _0xfaf95d['push'](_0xfaf95d['shift']());}catch(_0x143e68){_0xfaf95d['push'](_0xfaf95d['shift']());}}}(_0x4413,0xe991d));function _0x4413(){const _0x56b09d=['toString','40mFKBlO','padStart','6084070lIbrSb','encode','3259506dkCQUo','digest','map','subtle','1327852XOmEEf','12074XZepto','14754591VDVdgR','trim','615BIbJSB','672568jNqIpy','toLowerCase','2426221ReRDoK'];_0x4413=function(){return _0x56b09d;};return _0x4413();}function _0x33e5(_0x170831,_0x5544be){const _0x44133f=_0x4413();return _0x33e5=function(_0x33e5b3,_0x1d4d8b){_0x33e5b3=_0x33e5b3-0x1de;let _0x30bb55=_0x44133f[_0x33e5b3];return _0x30bb55;},_0x33e5(_0x170831,_0x5544be);}export async function sha256Hex(_0x547973){const _0x3e6e32=_0x33e5,_0x4321c0=String(_0x547973||'')[_0x3e6e32(0x1ee)]()[_0x3e6e32(0x1e0)]()['replace'](/ё/g,'е'),_0xba48a7=new TextEncoder()[_0x3e6e32(0x1e6)](_0x4321c0),_0x4dfd91=await crypto[_0x3e6e32(0x1ea)][_0x3e6e32(0x1e8)]('SHA-256',_0xba48a7);return[...new Uint8Array(_0x4dfd91)][_0x3e6e32(0x1e9)](_0x4d11fe=>_0x4d11fe[_0x3e6e32(0x1e2)](0x10)[_0x3e6e32(0x1e4)](0x2,'0'))['join']('');}export const ANSWER_HASH='55190d215ab0f34478403b58aee214e6cbc00842819379a08f1853894095b2bf';
