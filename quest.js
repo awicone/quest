@@ -2,7 +2,7 @@ import { sha256Hex, ANSWER_HASH } from "./hash.js";
 import { makeBinaryRiddle } from "./gen.js";
 
 // === Настройки квеста ===
-const FLAG = "FLAG{school_fire_started}";
+const FLAG = "school_fire_started"
 const COOKIE_NAME = "sid";
 // Намёк без прямого ключа: utf8, 8 бит, смотреть в storage, группы по 8, "k=v_*"
 const COOKIE_VALUE = "codec=utf8;bits=8;scan:storage;groups=8;k=v_*";
@@ -35,11 +35,7 @@ function eat(phrase) {
     } catch (e) {}
 
     // Кладём cookie с «полунамёком»
-    document.cookie =
-        COOKIE_NAME +
-        "=" +
-        encodeURIComponent(COOKIE_VALUE) +
-        "; path=/; samesite=Lax; max-age=3600";
+    document.cookie = `${COOKIE_NAME}=${COOKIE_VALUE}; path=/; samesite=Lax; max-age=3600`;
 
     // Ненавязчивые подсказки
     console.log("%cПеченьки приняты. Поищи следы: заголовки, cookie, хранилища.", "color:#22c55e");
