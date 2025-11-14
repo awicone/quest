@@ -22,12 +22,13 @@
               radial-gradient(900px 600px at 90% 120%, var(--glow2), transparent 60%),
               linear-gradient(180deg, var(--bg), var(--bg2));
       display:grid; place-items:center;
-      overflow:auto; /* мобильные браузеры со строками адреса */
+      overflow:auto;
       padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
     }
     .wrap{width:min(1080px, 94vw); padding:28px}
     .hero{
-      position:relative; border:1px solid var(--stroke);
+      position:relative;
+      border:1px solid var(--stroke);
       background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border-radius:22px; padding:34px 28px;
       box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.08);
@@ -54,6 +55,8 @@
     .muted{color:var(--muted); font-size:13px}
     a{color:#bcccff; text-decoration:none; border-bottom:1px dashed rgba(188,204,255,.35)}
     .footer{margin-top:12px; display:flex; gap:12px; align-items:center; color:#cbd5e1; font-size:13px; flex-wrap:wrap}
+
+    /* Еле заметный «шёпот» в правом нижнем углу карточки */
 
     /* Мобильная адаптация */
     @media (max-width:860px){
@@ -82,7 +85,7 @@
   <div class="hero">
     <span class="tag">DEVTOOLS QUEST • Binary</span>
     <h1>Сканировал QR — значит готов 😉</h1>
-    <p class="lead">Подсказки живут в консоли разработчика. На экране — только витрина.</p>
+    <p class="lead">Подсказки живут в консоли разработчика</p>
 
     <div class="grid">
       <section class="card steps" aria-label="Правила участия">
@@ -106,10 +109,15 @@
       </aside>
     </div>
 
-    <div class="footer">
-      <span>Контакты:</span>
-      <a href="https://t.me/become_undefined" target="_blank" rel="noopener">@become_undefined</a>
-      <a href="https://vk.com/awicone" target="_blank" rel="noopener">@awicone</a>
+    <div class="footer" style="display: flex; justify-content: space-between; flex-wrap: nowrap;">
+      <div>
+        <span>Контакты:</span>
+        <a href="https://t.me/become_undefined" target="_blank" rel="noopener">@become_undefined</a>
+        <span aria-hidden="true">•</span>
+        <a href="https://vk.com/awicone" target="_blank" rel="noopener">@awicone</a>
+      </div>
+      <div style="color: #1b2134;" aria-hidden="true">ответ в <code>quest.answer()</code>
+      </div>
     </div>
   </div>
 </div>

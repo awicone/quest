@@ -1,4 +1,3 @@
-// Нормализация и SHA-256 (hex)
 export async function sha256Hex(input) {
     const norm = String(input || "")
         .trim()
@@ -11,5 +10,4 @@ export async function sha256Hex(input) {
         .join("");
 }
 
-// Хэш правильного ответа "эхо" (нормализовано как выше)
 export const ANSWER_HASH = "55190d215ab0f34478403b58aee214e6cbc00842819379a08f1853894095b2bf";
