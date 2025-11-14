@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Mini Quest — DevTools Only</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --bg:#0f172a; --card:#111827; --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e; }
+    html,body{height:100%}
+    body{
+      margin:0; display:grid; place-items:center; background:radial-gradient(1200px 800px at 80% -10%, #1f2937, #0b1222), var(--bg);
+      color:var(--text); font:16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+    }
+    .card{ max-width:860px; padding:32px 28px; border-radius:18px; background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0));
+      border:1px solid rgba(255,255,255,.08); box-shadow:0 10px 40px rgba(0,0,0,.35); }
+    h1{margin:0 0 8px; font-size:28px}
+    p{margin:0 0 12px; color:var(--muted)}
+    code{background:rgba(255,255,255,.06); padding:.2em .45em; border-radius:8px}
+    .hint{margin-top:12px; color:#cbd5e1}
+    .flag{display:none; margin-top:16px; padding:12px 14px; border:1px dashed #4ade80; border-radius:10px; color:#bbf7d0}
+    .small{font-size:13px; color:var(--muted); margin-top:8px}
+    a{color:#93c5fd}
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>👋 Привет! Это мини-квест для DevTools</h1>
+  <p>Подсказки живут в консоли разработчика.</p>
+  <p class="hint">Открой DevTools: <code>F12</code> / <code>Cmd ⌘ + Option ⌥ + I</code> / <code>Ctrl + Shift + I</code></p>
+  <p class="small">Если что-то сломал — обнови страницу. Ничего страшного 🙂</p>
+  <div id="flag" class="flag"></div>
+</div>
+
+<script>
+  (function () {
+    const FLAG = "FLAG{school_fire_started}";
+    const COOKIE_NAME = "quest_step";
+    const COOKIE_HINT = "go_local_storage_key=vault"; // что положим в cookie
+    const STORAGE_KEY = "vault";
+
+    // Загадка (base64), чтобы не торчала в явном виде в исходнике
+    const riddleText = "0JHQsNC60L7QvdC+0LPQsNC30LjRgtC10LvRjNC90YvQuSDQv9GA0L7QstC+0LTRgNCwLCDQutC+0YLQvtC80YMg0YfQsNGA0L7Qv9C+0YDQvtC5OyDQv9GA0LjQvNC10LTQvdC+LdC+INC/0L7Qu9C20LjQstCwLCDQt9Cw0YPQvNC10YLRjA=="; // "Без языка, а говорит; без ушей, а слышит; без тела, а отзывается. Что это?"
+
+    const state = {
+      ateCookies: false,
+      answered: false,
+    };
+
+    function banner() {
+      const s1 = "🚀 Mini Quest";
+      const s2 = "Вся магия — в консоли. Напиши quest.help()";
+      console.log("%c" + s1, "color:#22c55e;font-weight:700;font-size:20px");
+      console.log("%c" + s2, "color:#93c5fd;font-size:14px");
+    }
+
+    function help() {
+      console.log("%cШаг 1:", "color:#a7f3d0");
+      console.log("Скажи волшебные слова в виде функции:");
+      console.log("%cquest.eat('поешь печеньков')", "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+
+      console.log("%cШаг 2:", "color:#a7f3d0");
+      console.log("Подсказка спрячется в cookie. Посмотри document.cookie или напиши:");
+      console.log("%cquest.cookie()", "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+
+      console.log("%cШаг 3:", "color:#a7f3d0");
+      console.log("В localStorage появится загадка. Подсказка скажет, где именно. Затем:");
+      console.log("%cquest.riddle()", "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+
+      console.log("%cШаг 4:", "color:#a7f3d0");
+      console.log("Нашёл ответ? Пришли его функции проверки:");
+      console.log("%cquest.answer('эхо')", "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+    }
+
+    function setCookie(name, value, maxAgeSeconds) {
+      document.cookie = name + "=" + encodeURIComponent(value) + "; path=/; samesite=Lax; max-age=" + (maxAgeSeconds || 3600);
+    }
+
+    function getCookie(name) {
+      const m = document.cookie.match(new RegExp("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)"));
+      return m ? decodeURIComponent(m.pop()) : null;
+    }
+
+    function eat(phrase) {
+      const normalized = String(phrase || "").trim().toLowerCase();
+      const ok = normalized === "поешь печеньков";
+      if (!ok) {
+        console.log("%cНе то заклинание. Подсказка: русскими буквами, во множественном числе 😉", "color:#fca5a5");
+        return;
+      }
+      state.ateCookies = true;
+      // 1) Кладём подсказку в cookie
+      setCookie(COOKIE_NAME, COOKIE_HINT, 3600);
+      // 2) Кладём загадку в localStorage (пользователь позже туда заглянет)
+      try {
+        localStorage.setItem(STORAGE_KEY, atob(riddleText));
+      } catch (e) {
+        /* ignore */
+      }
+      console.log("%cВкусно 😋", "color:#22c55e");
+      console.log("Подсказка спрятана в cookie под именем '%s'. Посмотри её значение и следуй указанию.", COOKIE_NAME);
+      console.log("Можешь просто выполнить: %cquest.cookie()", "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+    }
+
+    function cookieHint() {
+      const v = getCookie(COOKIE_NAME);
+      if (!state.ateCookies || !v) {
+        console.log("%cСначала нужно поесть печеньков: quest.eat('поешь печеньков')", "color:#fca5a5");
+        return;
+      }
+      console.log("%cCookie →", "color:#fde68a", v);
+      console.log("Подсказка говорит: загляни в localStorage по ключу '%s'. Либо просто напиши: %cquest.riddle()", STORAGE_KEY, "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+    }
+
+    function riddle() {
+      if (!state.ateCookies) {
+        console.log("%cПорядок важен: сначала печеньки! quest.eat('поешь печеньков')", "color:#fca5a5");
+        return;
+      }
+      const txt = localStorage.getItem(STORAGE_KEY);
+      if (!txt) {
+        console.log("%cНе вижу загадку в localStorage. Попробуй снова сделать quest.eat('поешь печеньков')", "color:#fca5a5");
+        return;
+      }
+      console.log("%cЗагадка:", "color:#a7f3d0");
+      console.log(txt);
+      console.log("Думаешь, знаешь ответ? Введи его так: %cquest.answer('эхо')", "background:#111;padding:2px 6px;border-radius:6px;color:#e5e7eb");
+    }
+
+    function normalizeAnswer(x) {
+      return String(x || "")
+              .trim()
+              .toLowerCase()
+              .replace(/[ё]/g, "е");
+    }
+
+    function answer(x) {
+      if (state.answered) {
+        console.log("Уже принято, флаг выдан. Проверь блок на странице 👇");
+        return;
+      }
+      const a = normalizeAnswer(x);
+      const accepted = ["эхо", "echo"];
+      if (!accepted.includes(a)) {
+        console.log("%cПока нет. Подумай ещё. Это не зверь, не человек и не робот.", "color:#fca5a5");
+        return;
+      }
+      state.answered = true;
+      const el = document.getElementById("flag");
+      el.style.display = "block";
+      el.innerHTML =
+              "✅ Верно! Твой флаг: <strong>" + FLAG +
+              "</strong><br>Пришли его мне в Telegram: <a href='https://t.me/become_undefined' target='_blank'>@become_undefined</a> или <a href='https://t.me/awicone' target='_blank'>@awicone</a> — и получи приз 🎁";
+      console.log("%cПоздравляю! Флаг: %c" + FLAG, "color:#22c55e", "background:#111;padding:2px 6px;border-radius:6px;color:#bbf7d0");
+      console.log("Пришли флаг: @become_undefined или @awicone — и забери свой приз 🎁");
+    }
+
+    // Экспорт команд в глобальную область
+    window.quest = { help, eat, cookie: cookieHint, riddle, answer };
+
+    // Приветственный баннер
+    banner();
+    // Авто-help при первом заходе
+    setTimeout(help, 100);
+  })();
+</script>
+</body>
+</html>
